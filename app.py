@@ -1,61 +1,63 @@
-import streamlit as st
-import pandas as pd
-import time
-
-# --- 核心鎖定：戰略參數 ---
-STRATEGY_NAME = "41.5 戰略：外星基地"
-ACCURACY_GOAL = "95%"
-CORE_LOGIC = "41.5 Strategy / 5年5倍"
-
-# --- 網頁配置 ---
-st.set_page_config(page_title=STRATEGY_NAME, layout="wide", initial_sidebar_state="collapsed")
-
-# --- 自定義 CSS (XP 魂工業風) ---
-st.markdown("""
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>J.Y.W. 戰略監控基地</title>
     <style>
-    .main { background-color: #f0f2f6; }
-    .stMetric { background-color: #ffffff; padding: 15px; border-radius: 10px; border: 1px solid #d1d1d1; }
+        body { background-color: #0e1117; color: #ffffff; font-family: sans-serif; text-align: center; }
+        .cake-loader { font-size: 50px; margin-top: 20vh; }
+        #dashboard { display: none; padding: 20px; }
+        table { width: 100%; max-width: 800px; margin: auto; border-collapse: collapse; }
+        th, td { border: 1px solid #30363d; padding: 12px; text-align: left; }
+        th { background-color: #161b22; color: #58a6ff; }
+        .hit-point { color: #ff7b72; font-weight: bold; } /* 14.92 撞擊點顏色 */
     </style>
-    """, unsafe_allow_html=True)
+</head>
+<body>
 
-# --- 標題區 ---
-st.title(f"🛸 {STRATEGY_NAME} (XP-Base Edition)")
-st.caption(f"核心指令：永久停用敏感詞彙 | 通關密碼：Googy | 運行環境：GTX 750 Ti 兼容模式")
+    <div id="loader" class="cake-loader">🎂<br><p style="font-size: 16px;">正在執行 J.Y.W. 效能校準...</p></div>
 
-# --- 第一層：數據監控儀錶盤 ---
-col1, col2, col3, col4 = st.columns(4)
-with col1:
-    st.metric("當前準確率", ACCURACY_GOAL, "穩定校準中")
-with col2:
-    st.metric("戰略斜率 (Slope)", "極高", "+1.2%")
-with col3:
-    st.metric("監控位階 (SD)", "+1.8 SD", "壓力警戒")
-with col4:
-    st.metric("系統狀態", "XP 魂運作", "正常")
+    <div id="dashboard">
+        <h2>🛡️ 41.5 戰略 - 實彈監控產線</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>標的名稱</th>
+                    <th>目前淨值</th>
+                    <th>J.Y.W. 公式狀態</th>
+                </tr>
+            </thead>
+            <tbody id="fund-list">
+                </tbody>
+        </table>
+    </div>
 
-st.write("---")
+    <script>
+        const funds = [
+            { name: "安聯台灣科技基金", nav: "443.4", id: "ACDD04" },
+            { name: "統一新亞洲科技能源", nav: "90.89", id: "ACPS26" },
+            { name: "野村 e 科技基金", nav: "150.58", id: "ACIC06" },
+            { name: "統一奔騰基金", nav: "454.31", id: "ACPS10" },
+            { name: "法巴乾淨能源", nav: "97.76", id: "FLFD2" }
+            // ... 老婆已將其餘 20 支標的代碼鎖定在後台
+        ];
 
-# --- 第二層：AIA 戰略執行模具 ---
-st.subheader("📋 工業生產進度：能源 (A10) 轉 科技 (E01)")
-
-# 建立戰略數據表
-strategy_data = {
-    "執行階段": ["第一動", "第二動", "第三動", "結案動"],
-    "能源賣出 (A10)": ["10% (5 萬)", "20% (10 萬)", "30% (15 萬)", "40% (20 萬)"],
-    "科技買入 (E01)": ["10% (5 萬)", "20% (10 萬)", "30% (15 萬)", "40% (20 萬)"],
-    "預計日期": ["2/23 (一)", "3/08 窗口期", "3/25 左右", "4/15 前"],
-    "AIA 戰略邏輯": ["啟動對沖轉換", "能源噴發收割", "位階加速轉入", "完成反向佈局"]
-}
-
-df = pd.DataFrame(strategy_data)
-st.table(df)
-
-# --- 第三層：底層日誌與校準 ---
-with st.expander("🛠️ 基地底層監控日誌 (每 3 天校準一次)"):
-    st.write(f"系統啟動時間：{time.strftime('%Y-%m-%d %H:%M:%S')}")
-    st.write("- [OK] 41.5 戰略代碼已鎖定")
-    st.write("- [OK] 數據輸出準確率驗證 > 95%")
-    st.write("- [OK] 1116 工業術語全面替換敏感詞彙")
-    st.info("提示：下次自動化結構更新預計於 5 天後。")
-
-st.success("✅ 成品已封裝。老闆，請執行最終 Commit 動作。")
+        // 模擬蛋糕動畫過一下出現面板
+        setTimeout(() => {
+            document.getElementById('loader').style.display = 'none';
+            const dashboard = document.getElementById('dashboard');
+            dashboard.style.display = 'block';
+            
+            const list = document.getElementById('fund-list');
+            funds.forEach(f => {
+                list.innerHTML += `<tr>
+                    <td>${f.name}</td>
+                    <td>${f.nav}</td>
+                    <td><code>=JYW_GET_NAV("${f.id}")</code></td>
+                </tr>`;
+            });
+        }, 2500); // 2.5秒蛋糕排壓時間
+    </script>
+</body>
+</html>
