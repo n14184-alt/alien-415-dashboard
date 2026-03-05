@@ -7,7 +7,7 @@ st.set_page_config(layout="wide", initial_sidebar_state="expanded")
 
 # 🏗️ 指揮官，請把你的試算表網址中那串長長的 ID 貼在下面引號內
 # 例如: https://docs.google.com/spreadsheets/d/這串就是ID/edit
-SHEET_ID = "請貼上你的試算表ID" 
+SHEET_ID = ""1En6L3T_ekxKJoat6C_YVVXrvhbgBSQsBxeCFrFcr__0"" 
 
 def get_sheet_data(sheet_id):
     try:
