@@ -2,30 +2,35 @@ import streamlit as st
 import streamlit.components.v1 as components
 import requests
 from bs4 import BeautifulSoup
-import time
 
-# PROJECT W - 25支實彈強力抓取引擎 (抗干擾強化版)
+# PROJECT W - 25支實彈【工業級抗干擾】引擎
 st.set_page_config(layout="wide", initial_sidebar_state="expanded")
 
 def JYW_GET_NAV(url):
     try:
-        # 強力投料：模擬真實瀏覽器行為，排除外部干擾
+        # 強力模擬真實瀏覽器投料，排除外部干擾
+        session = requests.Session()
         headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'Referer': 'https://www.moneydj.com/'
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+            'Accept-Language': 'zh-TW,zh;q=0.9',
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache'
         }
-        r = requests.get(url, headers=headers, timeout=10)
-        r.encoding = 'utf-8' # 校準編碼
+        r = session.get(url, headers=headers, timeout=10)
+        r.encoding = 'utf-8'
+        
         soup = BeautifulSoup(r.text, 'html.parser')
-        # 精準定位淨值數據 (MoneyDJ 專屬工業對位)
-        nav_element = soup.find("div", {"class": "t3n2"})
-        if nav_element:
-            return nav_element.text.strip()
-        return "定位失效"
+        # 精準對位：MoneyDJ 淨值標籤校準
+        nav = soup.select_list(".t3n2") if hasattr(soup, "select_list") else soup.find_all("div", class_="t3n2")
+        
+        if nav:
+            return nav[0].text.strip()
+        return "定位低效"
     except Exception as e:
-        return f"排壓中:{str(e)[:5]}"
+        return "排壓中"
 
-# 🏗️ 25 支精銳實彈：全量自動化
+# 🏗️ 25 支精銳實彈全量清單
 fund_data = [
     {"name": "安聯台灣科技基金", "id": "ACDD04"}, {"name": "統一新亞洲科技能源", "id": "UPT02B"},
     {"name": "野村 e 科技基金", "id": "ACKL01"}, {"name": "台新台灣中小基金", "id": "ACTS03"},
