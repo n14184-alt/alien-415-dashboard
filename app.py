@@ -11,6 +11,7 @@ class PrivateBrainCore:
         self.buy_point = 14.92
         self.accuracy_target = 0.998
         self.modules = [] 
+        
 
     def add_module(self, module_name, function):
         """一個一個加進去的功能"""
