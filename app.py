@@ -10,7 +10,7 @@ class PrivateBrainCore:
         self.strategy = "J.Y.W. (J.Y.W. Strategy)" # 根據通訊規範自動校準名稱
         self.buy_point = 14.92
         self.accuracy_target = 0.998
-        self.modules = [] 
+        self.modules = []  
         
 
     def add_module(self, module_name, function):
