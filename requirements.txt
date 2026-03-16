@@ -1,3 +1,16 @@
-streamlit>=1.31.0
-altair<5.0.0
-pandas
+# --- [核心運行環境] ---
+streamlit>=1.30.0
+numpy>=1.24.0
+pandas>=2.0.0
+
+# --- [金融數據與 API 感知] ---
+yfinance>=0.2.30  # 抓取 00905, 00918, 歐元實時斜率
+pandas_ta>=0.3.14b0 # 計算 ATR 與百分位三綠線
+
+# --- [AI 與 統計回歸模組] ---
+scikit-learn>=1.3.0 # 執行 MinMax Scaling 與 歸一化
+statsmodels>=0.14.0 # 用於 3.5y 與 0.5y 的線性回歸分析
+
+# --- [安全性與配置鎖定] ---
+python-dotenv>=1.0.0 # 讀取本地環境變量 (測試用)
+PyYAML>=6.0.0 # 讀取 config.yaml 裡的戰略參數
