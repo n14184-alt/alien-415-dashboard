@@ -1,35 +1,7 @@
-# 注入暴力大字 CSS：讓老闆看清楚每一吋數據
-st.markdown("""
-    <style>
-    /* 1. 背景改為清爽高對比：深藍灰 */
-    .stApp { background-color: #12141d; color: #ffffff; }
-    
-    /* 2. 標題與字體全局放大 */
-    h1 { font-size: 50px !important; color: #00ffcc !important; }
-    h3 { font-size: 32px !important; }
-    p, .stText { font-size: 20px !important; }
-
-    /* 3. 核心指標卡片：尺寸加倍，文字噴發 */
-    [data-testid="stMetric"] {
-        background-color: #1e2230;
-        padding: 30px !important;
-        border: 3px solid #00ffcc;
-        border-radius: 20px;
-        box-shadow: 0 0 20px rgba(0, 255, 204, 0.4);
-    }
-
-    /* 讓 14.92 和 0.7500 變大到不可忽視 */
-    [data-testid="stMetricValue"] {
-        font-size: 72px !important;  /* 暴力放大 */
-        font-weight: 900 !important;
-        color: #ffffff !important;
-    }
-
-    /* 指標標籤也放大 */
-    [data-testid="stMetricLabel"] {
-        font-size: 26px !important;
-        font-weight: 600 !important;
-        color: #00ffcc !important;
-    }
-    </style>
-    """, unsafe_allow_html=True)
+streamlit
+numpy
+pandas
+yfinance
+pandas_ta
+scikit-learn
+statsmodels
