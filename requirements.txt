@@ -1,7 +1,39 @@
-streamlit
-numpy
-pandas
-yfinance
-pandas_ta
-scikit-learn
-statsmodels
+# 注入亮白 CSS：徹底告別黑色，讓老闆看得清亮、舒服
+st.markdown("""
+    <style>
+    /* 1. 整體背景改為明亮的淺灰色 */
+    .stApp { background-color: #f8f9fa; color: #333333; }
+    
+    /* 2. 標題與字體改為深海藍，增加權威感 */
+    h1 { font-size: 50px !important; color: #1e3a8a !important; }
+    h3 { font-size: 32px !important; color: #1e40af !important; }
+    
+    /* 3. 核心指標卡片：改為純白底、深色影、粗邊框 */
+    [data-testid="stMetric"] {
+        background-color: #ffffff;
+        padding: 30px !important;
+        border: 3px solid #1e40af; /* 專業深藍邊 */
+        border-radius: 20px;
+        box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 4. 指標數字：黑色粗體，讓 14.92 噴發出來 */
+    [data-testid="stMetricValue"] {
+        font-size: 80px !important; /* 再放大，看得更清楚 */
+        font-weight: 900 !important;
+        color: #000000 !important;
+    }
+
+    /* 5. 指標標籤：深藍對比 */
+    [data-testid="stMetricLabel"] {
+        font-size: 28px !important;
+        font-weight: 600 !important;
+        color: #1e3a8a !important;
+    }
+
+    /* 側邊欄改為淡藍色 */
+    [data-testid="stSidebar"] {
+        background-color: #eef2ff !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
