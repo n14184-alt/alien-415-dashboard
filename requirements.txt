@@ -1,16 +1,35 @@
-# --- [核心運行環境] ---
-streamlit>=1.30.0
-numpy>=1.24.0
-pandas>=2.0.0
+# 注入暴力大字 CSS：讓老闆看清楚每一吋數據
+st.markdown("""
+    <style>
+    /* 1. 背景改為清爽高對比：深藍灰 */
+    .stApp { background-color: #12141d; color: #ffffff; }
+    
+    /* 2. 標題與字體全局放大 */
+    h1 { font-size: 50px !important; color: #00ffcc !important; }
+    h3 { font-size: 32px !important; }
+    p, .stText { font-size: 20px !important; }
 
-# --- [金融數據與 API 感知] ---
-yfinance>=0.2.30  # 抓取 00905, 00918, 歐元實時斜率
-pandas_ta>=0.3.14b0 # 計算 ATR 與百分位三綠線
+    /* 3. 核心指標卡片：尺寸加倍，文字噴發 */
+    [data-testid="stMetric"] {
+        background-color: #1e2230;
+        padding: 30px !important;
+        border: 3px solid #00ffcc;
+        border-radius: 20px;
+        box-shadow: 0 0 20px rgba(0, 255, 204, 0.4);
+    }
 
-# --- [AI 與 統計回歸模組] ---
-scikit-learn>=1.3.0 # 執行 MinMax Scaling 與 歸一化
-statsmodels>=0.14.0 # 用於 3.5y 與 0.5y 的線性回歸分析
+    /* 讓 14.92 和 0.7500 變大到不可忽視 */
+    [data-testid="stMetricValue"] {
+        font-size: 72px !important;  /* 暴力放大 */
+        font-weight: 900 !important;
+        color: #ffffff !important;
+    }
 
-# --- [安全性與配置鎖定] ---
-python-dotenv>=1.0.0 # 讀取本地環境變量 (測試用)
-PyYAML>=6.0.0 # 讀取 config.yaml 裡的戰略參數
+    /* 指標標籤也放大 */
+    [data-testid="stMetricLabel"] {
+        font-size: 26px !important;
+        font-weight: 600 !important;
+        color: #00ffcc !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
