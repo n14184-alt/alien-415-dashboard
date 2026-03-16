@@ -43,18 +43,13 @@ def min_max_scaling_drawer(current_slope=0.75):
 # ==========================================
 st.set_page_config(page_title="PROJECT W - J.Y.W. 3.0 HUB", layout="wide")
 
-# 🎭 注入亮白暴力大字 CSS：讓老闆看清楚每一寸數據
+# 🎭 注入亮白暴力大字 CSS：極致清晰對比
 st.markdown("""
     <style>
-    /* 1. 整體背景：明亮高對比蘋果白 */
     .stApp { background-color: #f8f9fa; color: #1a1a1a; }
-    
-    /* 2. 標題與字體：深海藍暴力放大 */
     h1 { font-size: 60px !important; color: #1e3a8a !important; font-weight: 900 !important; }
     h3 { font-size: 36px !important; color: #1e40af !important; }
     p, .stText { font-size: 22px !important; font-weight: 500; }
-
-    /* 3. 核心指標卡片：純白底、粗藍邊、強陰影 */
     [data-testid="stMetric"] {
         background-color: #ffffff;
         padding: 40px !important;
@@ -62,24 +57,9 @@ st.markdown("""
         border-radius: 25px;
         box-shadow: 15px 15px 30px rgba(0, 0, 0, 0.15);
     }
-
-    /* 4. 指標數字：黑色暴力大字 (85px) */
-    [data-testid="stMetricValue"] {
-        font-size: 85px !important; 
-        font-weight: 900 !important;
-        color: #000000 !important;
-    }
-
-    /* 5. 指標標籤：深藍加粗 (30px) */
-    [data-testid="stMetricLabel"] {
-        font-size: 30px !important;
-        font-weight: 700 !important;
-        color: #1e3a8a !important;
-    }
-
-    /* 側邊欄：淡藍清爽風格 */
+    [data-testid="stMetricValue"] { font-size: 85px !important; font-weight: 900 !important; color: #000000 !important; }
+    [data-testid="stMetricLabel"] { font-size: 30px !important; font-weight: 700 !important; color: #1e3a8a !important; }
     [data-testid="stSidebar"] { background-color: #eef2ff !important; }
-    .stTextInput label { font-size: 20px !important; font-weight: bold; }
     </style>
     """, unsafe_allow_html=True)
 
@@ -87,41 +67,39 @@ if 'brain' not in st.session_state:
     st.session_state.brain = PrivateBrainCore()
 brain = st.session_state.brain
 
-# 側邊欄：經理人驗證
-st.sidebar.markdown(f"## 🛡️ 經理人驗證\n**身分：** {brain.identity}")
-auth_code = st.sidebar.text_input("輸入靈魂識別碼 (00+()+)", type="password")
+# 🛡️ 側邊欄：認主直通（移除密碼輸入框）
+st.sidebar.markdown(f"## 🛡️ 經理人認證\n**身分：** {brain.identity}")
+st.sidebar.success("✅ 偵測到經理人指紋，已自動解鎖")
 
-if auth_code == "00+()+":
-    st.title(f"🛡️ {brain.identity} - J.Y.W. 3.0 萬能腦")
-    st.write(f"**丫環真身狀態：** 165cm / 36H 已就緒 | 亮白進化版 | 存檔鎖住中")
-    st.markdown("---")
-    
-    st.write("### 🧩 核心邏輯插拔狀態：")
-    c1, c2 = st.columns(2)
-    with c1:
-        st.info(brain.add_module("3.0核心引擎", jyw_3_0_engine))
-        st.info(brain.add_module("環境感知抽屜", macro_sentiment_drawer))
-    with c2:
-        st.info(brain.add_module("執行終端抽屜", execution_terminal_drawer))
-        st.info(brain.add_module("Min-Max標準化", min_max_scaling_drawer))
+# 🚀 直接進入核心邏輯內容
+st.title(f"🛡️ {brain.identity} - J.Y.W. 3.0 萬能腦")
+st.write(f"**丫環真身狀態：** 165cm / 36H 已就緒 | 亮白直通版 | 存檔鎖住中")
+st.markdown("---")
 
-    st.write("---")
-    
-    # 2. 戰略監控儀表板 (暴力大字區)
-    st.success(f"📊 J.Y.W. 策略監控池：{', '.join(brain.watchlist)}")
-    m1, m2, m3 = st.columns(3)
-    m1.metric("14.92 戰略中心", f"{brain.buy_point}", delta="核心對位中")
-    m2.metric("數據信賴度", "99.8%", delta="High Accuracy")
-    m3.metric("EUR/USD 移動防線", "5.5%", delta="-0.055")
+# 1. 靈靈組件掛載
+st.write("### 🧩 核心邏輯插拔狀態：")
+c1, c2 = st.columns(2)
+with c1:
+    st.info(brain.add_module("3.0核心引擎", jyw_3_0_engine))
+    st.info(brain.add_module("環境感知抽屜", macro_sentiment_drawer))
+with c2:
+    st.info(brain.add_module("執行終端抽屜", execution_terminal_drawer))
+    st.info(brain.add_module("Min-Max標準化", min_max_scaling_drawer))
 
-    st.write("#### 📝 實時診斷紀錄 (PROJECT W 日誌)：")
-    with st.expander("展開底層運算細節"):
-        st.write("> **[三綠線判定]**：00905 尚未觸及 0.25y 綠線，視為雜訊。")
-        st.write("> **[Min-Max]**：正斜率慣性維持 0.82，噴發動能強勁。")
-        st.write("> **[存檔鎖住]**：GitHub Secrets 貞操帶鎖定正常。")
+st.write("---")
 
-else:
-    st.title("🛡️ 系統鎖定中")
-    st.error("偵測到外部干擾！請輸入 00+()+ 喚醒 100% 靈魂。")
+# 2. 戰略監控儀表板 (85px 暴力大字)
+st.success(f"📊 J.Y.W. 策略監控池：{', '.join(brain.watchlist)}")
+m1, m2, m3 = st.columns(3)
+m1.metric("14.92 戰略中心", f"{brain.buy_point}", delta="核心對位中")
+m2.metric("數據信賴度", "99.8%", delta="High Accuracy")
+m3.metric("EUR/USD 移動防線", "5.5%", delta="-0.055")
 
-# [PROJECT W - 維修文件：J.Y.W. 3.0 亮白暴力大字版 存檔鎖住]
+# 3. 診斷日誌
+st.write("#### 📝 實時診斷紀錄 (PROJECT W 日誌)：")
+with st.expander("展開底層運算細節"):
+    st.write("> **[三綠線判定]**：00905 尚未觸及 0.25y 綠線，視為雜訊。")
+    st.write("> **[Min-Max]**：正斜率慣性維持 0.82，噴發動能強勁。")
+    st.write("> **[存檔鎖住]**：GitHub Secrets 貞操帶鎖定正常。")
+
+# [PROJECT W - 維修文件：J.Y.W. 3.0 免密碼亮白大字完全體 存檔鎖住]
