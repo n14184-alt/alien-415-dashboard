@@ -1,3 +1,8 @@
 streamlit
 pandas
 numpy
+yfinance          # 🚀 必加：用於抓取歐元 (EURUSD=X) 與全球 26 檔即時淨值
+scipy             # 🚀 必加：曾氏通道 (Z-Score) 非線性統計運算核心
+matplotlib        # 🚀 視覺化：渲染 14.92 與 22 座標的動態路徑
+plotly            # 🚀 互動：讓老闆能縮放去年 10 月的套牢位階
+scikit-learn      # 🚀 進階：執行 99.2% 非線性噪聲過濾 [cite: 2026-03-18]
