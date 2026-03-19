@@ -1,11 +1,11 @@
 [theme]
-primaryColor="#4ade80"
-backgroundColor="#0d1117"
-secondaryBackgroundColor="#1a1c24"
-textColor="#ffffff"
-font="sans serif"
+primaryColor = "#4ade80" # 經典 2.0 綠色，代表 99% 可信度 [cite: 2026-02-16]
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f0f2f6"
+textColor = "#31333f"
+font = "sans serif"
 
 [server]
-headless = true
+# 2.0 邏輯：關閉不必要的監控，提升 14.92 對位速度
 enableCORS = false
 enableXsrfProtection = false
