@@ -1,5 +1,6 @@
 [theme]
-primaryColor = "#4ade80" # 經典 2.0 綠色，代表 99% 可信度 [cite: 2026-02-16]
+# 經典 2.0 綠色，代表 99% 可信度 [cite: 2026-02-16]
+primaryColor = "#4ade80"
 backgroundColor = "#ffffff"
 secondaryBackgroundColor = "#f0f2f6"
 textColor = "#31333f"
@@ -9,4 +10,14 @@ font = "sans serif"
 # 2.0 邏輯：關閉不必要的監控，提升 14.92 對位速度
 enableCORS = false
 enableXsrfProtection = false
+# 🚫 關鍵新增：徹底封鎖官方遙測，防止行為被記錄
+enableTelemetry = false
 
+[client]
+# 2.0 邏輯：隱藏所有官方工具欄，只留實彈數據
+showSidebarNavigation = false
+toolbarMode = "hidden"
+
+[browser]
+# 確保在任何環境下都能 100% 渲染 3/8 的巔峰質感
+gatherUsageStats = false
