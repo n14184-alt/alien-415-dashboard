@@ -1,22 +1,12 @@
 {
     "name": "J.Y.W. 3.0 實彈開發環境",
     "image": "mcr.microsoft.com/devcontainers/python:3.11",
-    "features": {
-        "ghcr.io/devcontainers/features/common-utils:2": {}
-    },
     "customizations": {
         "vscode": {
-            "extensions": [
-                "ms-python.python",
-                "ms-python.vscode-pylance"
-            ],
-            "settings": {
-                "python.defaultInterpreterPath": "/usr/local/bin/python"
-            }
+            "extensions": ["ms-python.python", "ms-python.vscode-pylance"]
         }
     },
-    // 啟動後自動安裝肌肉依賴，執行 存檔 鎖住 [cite: 2026-02-23]
+    // 自動安裝 650 支肌肉所需的依賴環境
     "postCreateCommand": "pip install -r requirements.txt",
-    "forwardPorts": [8501],
     "remoteUser": "vscode"
 }
