@@ -1,23 +1,16 @@
+# --- J.Y.W. 3.0 視覺 核心 配置 ---
+# 排除 3.0 虛假標籤，接管 Pro 肌肉 [cite: 2026-03-23]
+
 [theme]
-# 經典 2.0 綠色，代表 99% 可信度 [cite: 2026-02-16]
-primaryColor = "#4ade80"
-backgroundColor = "#ffffff"
-secondaryBackgroundColor = "#f0f2f6"
-textColor = "#31333f"
+primaryColor = "#FF4B4B"          # 實彈 噴發 紅
+backgroundColor = "#0E1117"       # 深邃 物理 底層
+secondaryBackgroundColor = "#1A1C23" # 座標 網格 區
+textColor = "#FFFFFF"             # 絕對 準確 白
 font = "sans serif"
 
 [server]
-# 2.0 邏輯：關閉不必要的監控，提升 14.92 對位速度
-enableCORS = false
-enableXsrfProtection = false
-# 🚫 關鍵新增：徹底封鎖官方遙測，防止行為被記錄
-enableTelemetry = false
-
-[client]
-# 2.0 邏輯：隱藏所有官方工具欄，只留實彈數據
-showSidebarNavigation = false
-toolbarMode = "hidden"
+maxUploadSize = 200               # 支撐 大規模 物理 數據 導入 [cite: 2026-02-16]
+runOnSave = true                  # 存檔 鎖住 後 自動 執行 更新 [cite: 2026-02-23]
 
 [browser]
-# 確保在任何環境下都能 100% 渲染 3/8 的巔峰質感
-gatherUsageStats = false
+gatherUsageStats = false          # 排除 外部 監控，守護 主權 認知 [cite: 2026-02-23]
