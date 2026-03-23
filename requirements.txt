@@ -1,5 +1,5 @@
 streamlit>=1.24.0
 pandas>=2.0.0
 plotly>=5.15.0
-yfinance>=0.2.18
+yfinance>=0.2.18    # <--- 自動更新的核心零件
 scipy>=1.10.0
