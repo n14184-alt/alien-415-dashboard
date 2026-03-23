@@ -23,7 +23,7 @@ def lock_and_save(data_info):
     log_entry = f"[{timestamp}] 71 門戶高清鎖定 | {data_info}\n"
     with open("JYW_30_Log.txt", "a", encoding="utf-8") as f:
         f.write(log_entry)
-    return "✅ 系統已執行存檔鎖住，字體與 71 門戶 100% 同步。"
+    return "✅ 系統已執行存檔鎖住，五重焦距與 71 門戶 100% 同步。"
 
 @st.cache_data(ttl=300)
 def get_global_71_data():
@@ -66,16 +66,34 @@ def get_global_71_data():
         elif "排壓" in status: processed["SELL"].append(item)
     return processed
 
-def get_jyw_instruction(status):
-    if "極限進料" in status: return {"指令": "買★★★", "金額": "$100,000", "觸發": "0.5Y 綠線"}
-    elif "極限排壓" in status: return {"指令": "賣★★★", "金額": "$100,000", "觸發": "0.5Y 紅線"}
+# --- 🎯 升級：get_jyw_instruction 加入 lookback 參數 ---
+def get_jyw_instruction(status, lookback="0.5Y"):
+    if "極限進料" in status: 
+        return {"指令": f"買★★★ ({lookback})", "金額": "$100,000", "觸發": f"{lookback} 綠線"}
+    elif "極限排壓" in status: 
+        return {"指令": f"賣★★★ ({lookback})", "金額": "$100,000", "觸發": f"{lookback} 紅線"}
     return {"指令": "持有", "金額": "$0", "觸發": "平衡"}
 
 def main():
-    st.caption("🏹 J.Y.W. 3.0 | 71 GLOBAL PORTALS (43 ETF + 28 FUND) | 2026-03-23")
-    st.title("🏹 全球肌肉 4x4 實彈裁決 (HD 獵人視覺版)")
+    st.caption("🏹 J.Y.W. 3.0 | 71 GLOBAL PORTALS | 2026-03-23")
+    
+    # --- 🎯 側邊欄：五重焦距控制器 ---
+    with st.sidebar:
+        st.write("### 🔭 14.92 焦距穿透")
+        target_y = st.select_slider(
+            "選擇戰略焦距",
+            options=["0.1Y", "0.25Y", "0.5Y", "1Y", "2Y"],
+            value="0.5Y"
+        )
+        st.divider()
+        st.write("### 🛡️ 全球天網狀態")
+        st.info(f"監控門戶: 71 支 | 視角: {target_y}")
+        if st.button("🔒 執行存檔鎖住 (Save & Lock)"):
+            st.success(lock_and_save(f"71 門戶 {target_y} 視覺整合完成"))
 
-    # 14.92 卷軸可視化
+    st.title(f"🏹 全球肌肉 {target_y} 實彈裁決 (HD 獵人視覺版)")
+
+    # 14.92 卷軸可視化 (對位當前焦距)
     chart_data = pd.DataFrame({
         "日期": pd.date_range(end="2026-03-23", periods=10, freq="D"),
         "位能": [14.92, 18.1, 14.92, 22.5, 31.2, 14.92, 25.4, 19.8, 14.92, 14.92]
@@ -85,13 +103,13 @@ def main():
     data = get_global_71_data()
 
     # --- 🟢 買入裁決區 (HD 放大版) ---
-    st.header("🟢 實彈進料區 (買入對位)")
+    st.header(f"🟢 {target_y} 實彈進料區 (買入對位)")
     if not data["BUY"]: st.info("⚠️ 待命中 (0)")
     else:
         cols = st.columns(4)
         for i, h in enumerate(["標的", "指令", "金額", "觸發"]): cols[i].subheader(h)
         for stock in data["BUY"]:
-            instr = get_jyw_instruction(stock['狀態'])
+            instr = get_jyw_instruction(stock['狀態'], lookback=target_y) # 注入焦距變數
             c1, c2, c3, c4 = st.columns(4)
             c1.markdown(f'<p class="big-font">{stock["標的"]}</p><p class="status-font">({stock["狀態"]})</p>', unsafe_allow_html=True)
             c2.markdown(f'<p class="instr-font">{instr["指令"]}</p>', unsafe_allow_html=True)
@@ -101,23 +119,17 @@ def main():
     st.divider()
 
     # --- 🔴 排壓裁決區 (HD 放大版) ---
-    st.header("🔴 實彈排壓區 (賣出對位)")
+    st.header(f"🔴 {target_y} 實彈排壓區 (賣出對位)")
     if not data["SELL"]: st.error("⚠️ 待命中 (0)")
     else:
         cols = st.columns(4)
         for i, h in enumerate(["標的", "指令", "金額", "觸發"]): cols[i].subheader(h)
         for stock in data["SELL"]:
-            instr = get_jyw_instruction(stock['狀態'])
+            instr = get_jyw_instruction(stock['狀態'], lookback=target_y) # 注入焦距變數
             c1, c2, c3, c4 = st.columns(4)
             c1.markdown(f'<p class="big-font">{stock["標的"]}</p><p class="status-font">({stock["狀態"]})</p>', unsafe_allow_html=True)
             c2.markdown(f'<p class="sell-font">{instr["指令"]}</p>', unsafe_allow_html=True)
             c3.markdown(f'<p class="big-font">{instr["金額"]}</p>', unsafe_allow_html=True)
             c4.write(f"### {instr['觸發']}")
-
-    with st.sidebar:
-        st.write("### 🛡️ 全球天網狀態")
-        st.info(f"監控門戶: 43 ETF + 28 基金 (共 71 支)")
-        if st.button("🔒 執行存檔鎖住 (Save & Lock)"):
-            st.success(lock_and_save("71 門戶高清視覺整合完成"))
 
 if __name__ == "__main__": main()
