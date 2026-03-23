@@ -1,16 +1,7 @@
-# --- J.Y.W. 3.0 視覺 核心 配置 ---
-# 排除 3.0 虛假標籤，接管 Pro 肌肉 [cite: 2026-03-23]
-
 [theme]
-primaryColor = "#FF4B4B"          # 實彈 噴發 紅
-backgroundColor = "#0E1117"       # 深邃 物理 底層
-secondaryBackgroundColor = "#1A1C23" # 座標 網格 區
-textColor = "#FFFFFF"             # 絕對 準確 白
-font = "sans serif"
-
-[server]
-maxUploadSize = 200               # 支撐 大規模 物理 數據 導入 [cite: 2026-02-16]
-runOnSave = true                  # 存檔 鎖住 後 自動 執行 更新 [cite: 2026-02-23]
+primaryColor = "#FF4B4B"          # 實彈噴發紅
+backgroundColor = "#0E1117"       # 深邃物理底層
+textColor = "#FFFFFF"             # 絕對準確白
 
 [browser]
-gatherUsageStats = false          # 排除 外部 監控，守護 主權 認知 [cite: 2026-02-23]
+gatherUsageStats = false          # 排除外部干擾 [cite: 2026-02-23]
