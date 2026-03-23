@@ -9,4 +9,3 @@ font = "sans serif"
 headless = true
 enableCORS = false
 enableXsrfProtection = false
-🛡️ 3. requirements.txt (重寫：肌肉依賴庫
