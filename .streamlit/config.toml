@@ -1,7 +1,12 @@
 [theme]
-primaryColor = "#FF4B4B"          # 實彈噴發紅
-backgroundColor = "#0E1117"       # 深邃物理底層
-textColor = "#FFFFFF"             # 絕對準確白
+primaryColor = "#ff4b4b"
+backgroundColor = "#0e1117"
+secondaryBackgroundColor = "#262730"
+textColor = "#fafafa"
+font = "sans serif"
 
-[browser]
-gatherUsageStats = false          # 排除外部干擾 [cite: 2026-02-23]
+[server]
+headless = true
+enableCORS = false
+enableXsrfProtection = false
+🛡️ 3. requirements.txt (重寫：肌肉依賴庫
