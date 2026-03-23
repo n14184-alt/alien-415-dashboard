@@ -118,7 +118,7 @@ def main():
 
     st.divider()
 
-    # --- 🔴 排壓裁決區 (HD 放大版) ---
+    # --- 🔴 排壓裁決區 (HD 放大版) 
     st.header(f"🔴 {target_y} 實彈排壓區 (賣出對位)")
     if not data["SELL"]: st.error("⚠️ 待命中 (0)")
     else:
