@@ -1,12 +1,11 @@
 {
-    "name": "J.Y.W. 3.0 實彈開發環境",
+    "name": "J.Y.W. 3.0 全自動實彈環境",
     "image": "mcr.microsoft.com/devcontainers/python:3.11",
     "customizations": {
         "vscode": {
-            "extensions": ["ms-python.python", "ms-python.vscode-pylance"]
+            "extensions": ["ms-python.python"]
         }
     },
-    // 自動安裝 650 支肌肉所需的依賴環境
     "postCreateCommand": "pip install -r requirements.txt",
     "remoteUser": "vscode"
 }
