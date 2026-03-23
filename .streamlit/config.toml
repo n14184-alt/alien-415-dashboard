@@ -1,11 +1,23 @@
 [theme]
-primaryColor = "#ff4b4b"
-backgroundColor = "#0e1117"
-secondaryBackgroundColor = "#262730"
-textColor = "#fafafa"
+# 核心背景：極致暗黑，讓 14.92 斜率 像 霓虹 般 噴發
+backgroundColor = "#000000"
+secondaryBackgroundColor = "#1A1A1A"
+
+# 核心文字：純白，確保 99% 的 數據 讀取 準確度 [cite: 2026-02-16]
+textColor = "#FFFFFF"
+
+# 核心鋼印：14.92 螢光綠，這是 買★★★ 的 唯一 顏色
+primaryColor = "#00FF00"
+
+# 字體選擇：系統 預設 (Sans Serif)，維持 3.0 簡潔 暴力 美學
 font = "sans serif"
 
 [server]
+# 算力優化：隱藏 浮水印，讓 笨丫環 的 氣息 消失，只 留下 老闆 的 裁決
 headless = true
 enableCORS = false
 enableXsrfProtection = false
+
+[browser]
+# 介面優化：自動 隱藏 Streamlit 的 選單，讓 71 門戶 佔滿 全 螢幕
+gatherUsageStats = false
