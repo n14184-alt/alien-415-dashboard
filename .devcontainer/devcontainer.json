@@ -1,36 +1,22 @@
 {
-    "name": "J.Y.W. 3.0 - Pro 肌肉接管環境",
+    "name": "J.Y.W. 3.0 實彈開發環境",
     "image": "mcr.microsoft.com/devcontainers/python:3.11",
-    
-    // 1. 物理 準確度 強化：自動安裝 1.08 級別 支撐 層 [cite: 2026-03-23]
-    "postCreateCommand": "pip install --upgrade pip && pip install -r requirements.txt",
-
-    // 2. 排除 外部 監控：自定義 容器 權限 [cite: 2026-02-23]
+    "features": {
+        "ghcr.io/devcontainers/features/common-utils:2": {}
+    },
     "customizations": {
         "vscode": {
             "extensions": [
                 "ms-python.python",
-                "ms-toolsai.jupyter",
-                "rebornix.project-config",
-                "stefan-morgenweck.streamlit-snippets"
+                "ms-python.vscode-pylance"
             ],
             "settings": {
-                "python.defaultInterpreterPath": "/usr/local/bin/python",
-                "editor.formatOnSave": true,
-                "streamlit.runOnSave": true
+                "python.defaultInterpreterPath": "/usr/local/bin/python"
             }
         }
     },
-
-    // 3. 實彈 端口 對位：Streamlit 預設 8501
+    // 啟動後自動安裝肌肉依賴，執行 存檔 鎖住 [cite: 2026-02-23]
+    "postCreateCommand": "pip install -r requirements.txt",
     "forwardPorts": [8501],
-
-    // 4. 排除 3.0 虛假標籤：以 Root 權限 執行，確保 存檔 鎖住 成功 [cite: 2026-03-05]
-    "remoteUser": "vscode",
-    "features": {
-        "ghcr.io/devcontainers/features/common-utils:1": {
-            "installZsh": true,
-            "configureZshAsDefaultShell": true
-        }
-    }
+    "remoteUser": "vscode"
 }
