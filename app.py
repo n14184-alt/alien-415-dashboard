@@ -89,10 +89,14 @@ if st.sidebar.button(f"啟動 {target_list} 實彈 總攻"):
             df_final = pd.DataFrame(results)
             
             # --- 1.08 級別 物理 排序 協議：高效 置頂 鋼印 ---
-            # 強制 定義 狀態 的 權重：高效(0) > 低效(1) > 未知(2)
-            df_final['狀態'] = pd.Categorical(df_final['狀態'], categories=['高效', '低效', '未知', '錯誤'], ordered=True)
+            # 強制 定義 狀態 的 物理 權重，確保 高效 站在 0 位
+            df_final['狀態'] = pd.Categorical(
+                df_final['狀態'], 
+                categories=['高效', '低效', '未知', '錯誤'], 
+                ordered=True
+            )
             
-            # 依照 狀態(高效優先)、名稱(三星優先)、ATR(波動大優先) 進行 排序
+            # 依照 狀態(權重優先)、名稱(三星優先)、ATR(波動大優先) 進行 排序
             df_sorted = df_final.sort_values(
                 by=['狀態', '名稱', 'ATR'], 
                 ascending=[True, False, False]
