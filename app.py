@@ -51,7 +51,6 @@ def get_jyw_metrics(symbol):
     try:
         ticker = str(symbol).strip().upper()
         display_name = STOCK_NAME_MAP.get(ticker, ticker)
-        
         data = yf.Ticker(ticker)
         df = data.history(period="60d")
         
@@ -79,7 +78,7 @@ st.sidebar.info("戰略 狀態：Keep 實彈 優先")
 target_list = st.sidebar.selectbox("請 選擇 監控 抽屜", list(MONITOR_LISTS.keys()))
 
 if st.sidebar.button(f"啟動 {target_list} 實彈 總攻"):
-    with st.spinner(f"正在 物理 校準 {target_list} 數據 並 執行 排序..."):
+    with st.spinner(f"正在 物理 校準 {target_list} 數據 並 執行 高效 排序..."):
         results = []
         for s in MONITOR_LISTS[target_list]:
             res = get_jyw_metrics(s)
@@ -89,14 +88,15 @@ if st.sidebar.button(f"啟動 {target_list} 實彈 總攻"):
             st.success(f"{target_list} 實彈 歸位！")
             df_final = pd.DataFrame(results)
             
-            # --- 1.08 級別 物理 排序 協議：修正 版 [cite: 2026-03-24] ---
-            # 1. 狀態：高效(A-Z) 優先
-            # 2. 名稱：三星(★★★) 優先
-            # 3. ATR：波動大 優先
+            # --- 1.08 級別 物理 排序 協議：高效 置頂 鋼印 ---
+            # 強制 定義 狀態 的 權重：高效(0) > 低效(1) > 未知(2)
+            df_final['狀態'] = pd.Categorical(df_final['狀態'], categories=['高效', '低效', '未知', '錯誤'], ordered=True)
+            
+            # 依照 狀態(高效優先)、名稱(三星優先)、ATR(波動大優先) 進行 排序
             df_sorted = df_final.sort_values(
                 by=['狀態', '名稱', 'ATR'], 
                 ascending=[True, False, False]
-            ).reset_index(drop=True) # 老闆！就是這行重置肌肉讓序號從 0 開始排好！
+            ).reset_index(drop=True)
             
             st.table(df_sorted)
         else:
