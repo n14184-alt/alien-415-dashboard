@@ -61,7 +61,7 @@ def get_jyw_metrics(symbol):
         atr = high_low.rolling(14).mean().iloc[-1]
         close = df['Close'].iloc[-1]
         
-        # 狀態 判定：高效 優先 [cite: 2026-02-18]
+        # 狀態 判定：替換「低壓」為「低效」 [cite: 2026-02-18]
         status = "高效" if close > (df['Close'].iloc[-2] - 2*atr) else "低效"
         
         return {
@@ -78,7 +78,7 @@ st.sidebar.info("戰略 狀態：Keep 實彈 優先")
 target_list = st.sidebar.selectbox("請 選擇 監控 抽屜", list(MONITOR_LISTS.keys()))
 
 if st.sidebar.button(f"啟動 {target_list} 實彈 總攻"):
-    with st.spinner(f"正在 物理 校準 {target_list} 數據 並 執行 高效 排序..."):
+    with st.spinner(f"正在 物理 校準 {target_list} 數據 並 執行 能量 排序..."):
         results = []
         for s in MONITOR_LISTS[target_list]:
             res = get_jyw_metrics(s)
@@ -88,17 +88,20 @@ if st.sidebar.button(f"啟動 {target_list} 實彈 總攻"):
             st.success(f"{target_list} 實彈 歸位！")
             df_final = pd.DataFrame(results)
             
-            # --- 1.08 級別 物理 排序 協議：高效 置頂 鋼印 ---
-            # 強制 定義 狀態 的 物理 權重，確保 高效 站在 0 位
+            # --- 1.08 級別 物理 排序 協議：狀態 置頂 + 能量 優先 [cite: 2026-03-24] ---
+            # 強制 定義 狀態 權重，確保「高效」絕對 置頂
             df_final['狀態'] = pd.Categorical(
                 df_final['狀態'], 
                 categories=['高效', '低效', '未知', '錯誤'], 
                 ordered=True
             )
             
-            # 依照 狀態(權重優先)、名稱(三星優先)、ATR(波動大優先) 進行 排序
+            # --- 核心 修正：將 ATR 提升 至 第二 優先級，名稱 改為 輔助 ---
+            # 優先級 1：狀態 (高效優先)
+            # 優先級 2：ATR (能量大優先，確保 高效 區域 中 噴發力 最強 的 在 前面)
+            # 優先級 3：名稱 (輔助)
             df_sorted = df_final.sort_values(
-                by=['狀態', '名稱', 'ATR'], 
+                by=['狀態', 'ATR', '名稱'], 
                 ascending=[True, False, False]
             ).reset_index(drop=True)
             
