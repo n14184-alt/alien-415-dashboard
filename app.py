@@ -6,37 +6,30 @@ import pandas as pd
 st.set_page_config(page_title="J.Y.W. 3.0 實彈 指揮部", layout="wide")
 st.title("1.08 級別 實彈 監控：Keep 抽屜 優先 模式")
 
-# --- 物理 裝填 區：老闆，這裡 已經 修正 了 語法 與 中文 註解 ---
+# --- 1.08 級別 中文 映射 字典 [cite: 2026-03-25] ---
+STOCK_NAME_MAP = {
+    "2330.TW": "台積電 ★★★",
+    "2891.TW": "中信金",
+    "2454.TW": "聯發科 ★★★",
+    "2412.TW": "中華電",
+    "2002.TW": "中鋼",
+    "2308.TW": "台達電 ★★★",
+    "2881.TW": "富邦金",
+    "1303.TW": "南亞",
+    "1216.TW": "統一",
+    "4904.TW": "遠傳"
+}
+
+# --- 物理 裝填 區 ---
 MONITOR_LISTS = {
     "基金 (28)": [
-        "F0HKG05X22:FO",  # 安聯台灣科技基金
-        "F00000MMGD:FO",  # 統一新亞洲科技能源
-        "F0HKG05WZM:FO",  # 野村 e 科技基金
-        "F0HKG05X2C:FO",  # 統一奔騰基金
-        "F000015CWL:FO",  # 國泰台灣高股息(B)
-        "F00001EBH4:FO",  # 元大全球優質龍頭平衡
-        "F0HKG05WYP:FO",  # 台新台灣中小基金
-        "F00000ZH5C:FO",  # 路博邁台灣5G股票
-        "F0HKG05WSZ:FO",  # 街口中小
-        "F0HKG05WZO:FO",  # 街口台灣
-        "F00000X5LG:FO",  # 統一全球新科技(台)
-        "F00000OXXD:FO",  # 安聯收益成長AM
-        "F00001EMTX:FO",  # 貝萊德世界科技
-        "F00001ELXG:FO",  # 貝萊德世界黃金
-        "F00001EMTU:FO",  # 貝萊德世界礦業
-        "F0GBR04ARK:FO",  # 富坦東歐(歐元)
-        "F000000GKS:FO",  # 富坦天然資源
-        "F0GBR04V6U:FO",  # 富坦生技領航
-        "F0GBR04SNN:FO",  # JF拉美
-        "F0HKG062PO:FO",  # 利安資金韓國
-        "F0GBR04AC1:FO",  # 景順環球消費趨勢
-        "F0GBR04BG3:FO",  # 摩根士丹利美國增長
-        "F00000PXGY:FO",  # 法巴乾淨能源
-        "F00001ELXE:FO",  # 貝萊德世界能源
-        "F00001ELXD:FO",  # 貝萊德永續能源
-        "F00001ELXF:FO",  # 貝萊德世界金融
-        "F0GBR04ASX:FO",  # 貝萊德美元儲備(A2)
-        "F00000MK1B:FO"   # 群益印度中小
+        "F0HKG05X22:FO", "F00000MMGD:FO", "F0HKG05WZM:FO", "F0HKG05X2C:FO", 
+        "F000015CWL:FO", "F00001EBH4:FO", "F0HKG05WYP:FO", "F00000ZH5C:FO", 
+        "F0HKG05WSZ:FO", "F0HKG05WZO:FO", "F00000X5LG:FO", "F00000OXXD:FO", 
+        "F00001EMTX:FO", "F00001ELXG:FO", "F00001EMTU:FO", "F0GBR04ARK:FO", 
+        "F000000GKS:FO", "F0GBR04V6U:FO", "F0GBR04SNN:FO", "F0HKG062PO:FO", 
+        "F0GBR04AC1:FO", "F0GBR04BG3:FO", "F00000PXGY:FO", "F00001ELXE:FO", 
+        "F00001ELXD:FO", "F00001ELXF:FO", "F0GBR04ASX:FO", "F00000MK1B:FO"
     ],
     "ETF (56)": [
         "00913.TW", "00830.TW", "00899.TW", "00733.TW", "00891.TW", 
@@ -50,45 +43,37 @@ MONITOR_LISTS = {
         "00875.TW", "00954.TW", "00905.TW", "00668.TW", "00662.TW", 
         "00646.TW", "00770.TW", "00861.TW", "00963.TW", "00964.TW", "00971.TW"
     ],
-    "個股 (精選)": [
-    "2330.TW", # 台積電
-        "2891.TW", # 中信金
-        "2454.TW", # 聯發科
-        "2412.TW", # 中華電
-        "2002.TW", # 中鋼
-        "2308.TW", # 台達電
-        "2881.TW", # 富邦金
-        "1303.TW", # 南亞
-        "1216.TW", # 統一
-        "4904.TW"  # 遠傳
-    ]
+    "個股 (精選)": list(STOCK_NAME_MAP.keys())
 }
 
 def get_jyw_metrics(symbol):
-    """ 核心 運算：14.92 斜率 + ATR 物理 雙壓 """
+    """ 核心 運算：名稱 映射 + 狀態 判定 """
     try:
         ticker = str(symbol).strip().upper()
+        # 物理 名稱 對位 [cite: 2026-03-25]
+        display_name = STOCK_NAME_MAP.get(ticker, ticker)
+        
         data = yf.Ticker(ticker)
         df = data.history(period="60d")
         
         if df.empty or len(df) < 15:
-            return {"代號": ticker, "錯誤": "查無數據"}
+            return {"標的": display_name, "錯誤": "查無數據"}
             
         high_low = df['High'] - df['Low']
         atr = high_low.rolling(14).mean().iloc[-1]
         close = df['Close'].iloc[-1]
         
-        # 狀態 判定 [cite: 2026-02-18]
+        # 狀態 判定：替換「低壓」為「低效」 [cite: 2026-02-18]
         status = "高效" if close > (df['Close'].iloc[-2] - 2*atr) else "低效"
         
         return {
-            "代號": ticker,
+            "名稱": display_name,
             "收盤": round(close, 2),
             "ATR": round(atr, 2),
             "狀態": status
         }
     except Exception as e:
-        return {"代號": symbol, "錯誤": str(e)}
+        return {"名稱": symbol, "錯誤": str(e)}
 
 # --- 側邊欄 自動化 選單 ---
 st.sidebar.info("戰略 狀態：Keep 實彈 優先")
@@ -103,6 +88,7 @@ if st.sidebar.button(f"啟動 {target_list} 實彈 總攻"):
         
         if results:
             st.success(f"{target_list} 實彈 歸位！")
+            # 轉換 為 DataFrame 並 移除 yf 原始 代號 欄位，僅 顯示 中文 名稱
             st.table(pd.DataFrame(results))
         else:
             st.error("物理 斷線：代號 格式 有誤。")
