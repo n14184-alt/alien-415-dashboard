@@ -6,7 +6,7 @@ import pandas as pd
 st.set_page_config(page_title="J.Y.W. 3.0 實彈 指揮部", layout="wide")
 st.title("1.08 級別 實彈 監控：Keep 抽屜 優先 模式")
 
-# --- 1.08 級別 中文 映射 字典 [cite: 2026-03-25] ---
+# --- 1.08 級別 中文 映射 字典 ---
 STOCK_NAME_MAP = {
     "2330.TW": "台積電 ★★★",
     "2891.TW": "中信金",
@@ -56,13 +56,13 @@ def get_jyw_metrics(symbol):
         df = data.history(period="60d")
         
         if df.empty or len(df) < 15:
-            return {"名稱": display_name, "錯誤": "查無數據", "狀態": "未知", "ATR": 0}
+            return {"名稱": display_name, "收盤": 0, "ATR": 0, "狀態": "未知"}
             
         high_low = df['High'] - df['Low']
         atr = high_low.rolling(14).mean().iloc[-1]
         close = df['Close'].iloc[-1]
         
-        # 狀態 判定：替換「低壓」為「低效」 [cite: 2026-02-18]
+        # 狀態 判定：高效 優先 [cite: 2026-02-18]
         status = "高效" if close > (df['Close'].iloc[-2] - 2*atr) else "低效"
         
         return {
@@ -72,7 +72,7 @@ def get_jyw_metrics(symbol):
             "狀態": status
         }
     except Exception as e:
-        return {"名稱": symbol, "錯誤": str(e), "狀態": "錯誤", "ATR": 0}
+        return {"名稱": symbol, "收盤": 0, "ATR": 0, "狀態": "錯誤"}
 
 # --- 側邊欄 自動化 選單 ---
 st.sidebar.info("戰略 狀態：Keep 實彈 優先")
@@ -89,15 +89,15 @@ if st.sidebar.button(f"啟動 {target_list} 實彈 總攻"):
             st.success(f"{target_list} 實彈 歸位！")
             df_final = pd.DataFrame(results)
             
-            # --- 1.08 級別 物理 排序 協議 [cite: 2026-03-24] ---
-            # 優先級 1：狀態 (高效優先)
-            # 優先級 2：名稱 (確保 ★★★ 在最上面)
-            # 優先級 3：ATR (波動大優先)
+            # --- 1.08 級別 物理 排序 協議：修正 版 [cite: 2026-03-24] ---
+            # 1. 狀態：高效(A-Z) 優先
+            # 2. 名稱：三星(★★★) 優先
+            # 3. ATR：波動大 優先
             df_sorted = df_final.sort_values(
                 by=['狀態', '名稱', 'ATR'], 
                 ascending=[True, False, False]
-            )
+            ).reset_index(drop=True) # 老闆！就是這行重置肌肉讓序號從 0 開始排好！
             
             st.table(df_sorted)
         else:
-            st.error("物理 斷線：代號 格式 有誤。")
+            st.error("物理 斷線：格式 有誤。")
