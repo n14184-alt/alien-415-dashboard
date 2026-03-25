@@ -4,39 +4,12 @@ import pandas as pd
 
 # --- 1.08 級別 物理 鋼印 ---
 st.set_page_config(page_title="J.Y.W. 3.0 實彈 指揮部", layout="wide")
-
-# --- [安全性 物理 鎖定] 密碼 模組 ---
-def check_password():
-    def password_entered():
-        # --- 老闆，請在這裡輸入您想好的密碼 ---
-        if st.session_state["password"] == "7533967": # 暫定密碼，您可以隨時修改
-            st.session_state["password_correct"] = True
-            del st.session_state["password"]
-        else:
-            st.session_state["password_correct"] = False
-
-    if "password_correct" not in st.session_state:
-        st.title("🛡️ J.Y.W. 3.0 指揮部 安全 鎖定")
-        st.text_input("請輸入 啟動 金鑰 以 裝填 實彈：", type="password", on_change=password_entered, key="password")
-        return False
-    elif not st.session_state["password_correct"]:
-        st.title("🛡️ J.Y.W. 3.0 指揮部 安全 鎖定")
-        st.error("❌ 金鑰 錯誤，物理 阻絕 ！！")
-        st.text_input("請重新輸入：", type="password", on_change=password_entered, key="password")
-        return False
-    return True
-
-# 執行 密碼 檢查
-if not check_password():
-    st.stop()
-
-# --- 通過 驗證 後 的 實彈 內容 ---
 st.title("🎯 1.08 級別：J.Y.W. 綜合 實彈 指揮部")
 
-# --- 物理 鎖定 基金 實彈 彈道 ---
+# --- 物理 鎖定 基金 實彈 彈道 [cite: 2026-03-25] ---
 FUND_PUB_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ9lbbB4FZm94vh_iSggV2eeQWsngZmvOf1MF5JbOH7K7Fxl02shNIS7Rj2RfdqAhkg7Q0JbAkQUJ3L/pub?output=csv"
 
-# --- ETF/個股 對位 字典 (由 老闆 親自 校準) ---
+# --- ETF/個股 對位 字典 ---
 STOCK_NAME_MAP = {
     "2330.TW": "2330 台積電 ★★★", "2891.TW": "2891 中信金", "2454.TW": "2454 聯發科 ★★★",
     "2412.TW": "2412 中華電", "2002.TW": "2002 中鋼", "2308.TW": "2308 台達電 ★★★",
@@ -64,11 +37,61 @@ STOCK_NAME_MAP = {
 MONITOR_LISTS = {
     "ETF (56)": list(STOCK_NAME_MAP.keys())[10:], 
     "個股 (精選)": list(STOCK_NAME_MAP.keys())[:10],
-    "基金 (28)": ["PUB_SHEET_TRIGGER"]
+    "基金 (28)": ["PUB_SHEET_TRIGGER"] # 指向 試算表 彈道
 }
 
-# --- 引擎 邏輯 (省略 yfinance 部分，與剛才一致) ---
-# ... (這裡包含 get_stock_metrics 與 get_fund_metrics_from_sheet) ...
+# --- 舊 引擎： 處理 ETF/個股 (yfinance) ---
+def get_stock_metrics(symbol):
+    try:
+        ticker = str(symbol).strip().upper()
+        display_name = STOCK_NAME_MAP.get(ticker, ticker)
+        data = yf.Ticker(ticker)
+        df = data.history(period="60d")
+        if df.empty or len(df) < 15:
+            return {"名稱": display_name, "收盤": 0, "ATR": 0, "狀態": "未知"}
+        high_low = df['High'] - df['Low']
+        atr = high_low.rolling(14).mean().iloc[-1]
+        close = df['Close'].iloc[-1]
+        status = "高效" if close > (df['Close'].iloc[-2] - 2*atr) else "低效"
+        return {"名稱": display_name, "收盤": round(close, 2), "ATR": round(atr, 2), "狀態": status}
+    except:
+        return {"名稱": symbol, "收盤": 0, "ATR": 0, "狀態": "錯誤"}
 
-# --- 側邊欄 與 顯示 邏輯 (省略，與剛才一致) ---
-# ... (包含 style_atr 渲染 與 df_sorted 排序) ...
+# --- 新 引擎： 處理 基金 (pubhtml) [cite: 2026-03-25] ---
+def get_fund_metrics_from_sheet():
+    try:
+        df = pd.read_csv(FUND_PUB_URL)
+        df['當日股價'] = pd.to_numeric(df['當日股價'], errors='coerce')
+        df['昨日股價'] = pd.to_numeric(df['昨日股價'], errors='coerce')
+        # 物理 運算 ATR (變動率)
+        df['ATR'] = ((df['當日股價'] - df['昨日股價']) / df['昨日股價']) * 100
+        # 格式 統一 對位
+        df_res = df[['名稱', '當日股價', 'ATR']].copy()
+        df_res.columns = ['名稱', '收盤', 'ATR']
+        df_res['狀態'] = df_res['ATR'].apply(lambda x: "高效" if x > 0 else "低效")
+        return df_res
+    except:
+        return None
+
+# --- 側邊欄 ---
+st.sidebar.info("戰略 狀態：保持實彈優先")
+target_list = st.sidebar.selectbox("請選擇監控公桌", list(MONITOR_LISTS.keys()))
+
+if st.sidebar.button(f"啟動 {target_list} 買進攻"):
+    with st.spinner(f"正在 物理 校準 {target_list} 數據..."):
+        if target_list == "基金 (28)":
+            df_final = get_fund_metrics_from_sheet()
+        else:
+            results = [get_stock_metrics(s) for s in MONITOR_LISTS[target_list]]
+            df_final = pd.DataFrame(results)
+
+        if df_final is not None:
+            # 視覺 渲染 邏輯 [cite: 2026-02-18]
+            def style_atr(val):
+                if val > 0.5: return 'background-color: #900c3f; color: white; font-weight: bold'
+                elif val < -0.5: return 'background-color: #145a32; color: #d4edda;'
+                return ''
+            
+            # 能量 排序 鎖定
+            df_sorted = df_final.sort_values(by='ATR', ascending=False).reset_index(drop=True)
+            st.dataframe(df_sorted.style.applymap(style_atr, subset=['ATR']), use_container_width=True, height=800)
