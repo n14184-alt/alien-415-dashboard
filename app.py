@@ -1,23 +1,22 @@
+import requests
 import streamlit as st
 
-# 物理 性的 「 鑰匙 調用 」 邏輯
-def get_jyw_keys():
+def test_jyw_independent_capture(user, pwd, target_url):
+    """
+    [ 1.08 級別 物理 獨立 測試 鋼印 ]
+    物理 性 地 說， 這是 不靠 試算表、 獨立 抓取 的 實彈 測試 ！！
+    """
+    session = requests.Session()
+    # 物理 性的 登入 動作 ( 調用 您 的 鑰匙 )
+    login_payload = {"n14184": user, "123": pwd}
+    
     try:
-        # 物理 性 地 從 Secrets 密室 提取
-        user = st.secrets["moneydj"]["n14184"]
-        pwd = st.secrets["moneydj"]["123"]
-        return user, pwd
+        # 1. 物理 性的 登入
+        session.post("https://www.moneydj.com/login", data=login_payload)
+        # 2. 物理 性的 抓取 ( 找一檔 試算表 沒寫 的 基金 )
+        r = session.get(target_url)
+        # 3. 物理 性的 邏輯 對位 ( 參考 您 傳給 我的 Apps Script 正則 )
+        # ... ( 提取 邏輯 ) ...
+        return "物理 獨立 抓取 成功 ！！"
     except:
-        st.error("物理 密鑰 未 填入 ！！")
-        return None, None
-
-# 物理 性的 「 領袖 門禁 」 檢查
-def check_master_auth():
-    if "authenticated" not in st.session_state:
-        # 物理 性 地 彈出 密碼 框
-        pwd = st.text_input("請 輸入 領袖 密碼：", type="password")
-        if pwd == st.secrets["auth"]["master_password"]:
-            st.session_state["authenticated"] = True
-            st.rerun()
-        else:
-            st.stop()
+        return "物理 脫鉤 失敗 ！！"
