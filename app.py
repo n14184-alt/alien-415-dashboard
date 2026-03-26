@@ -1,35 +1,50 @@
+import streamlit as st
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+import time
+import random
+
+# [PROJECT W - 1.08 級別 雲端 環境 物理 修正]
+# 物理 性 地 解決 Streamlit Cloud 之 Chromium 路徑 鎖定 問題
+
 def fetch_fund_nav_by_isin(isin_code):
     chrome_options = Options()
+    
+    # 物理 性的 「 雲端 隱身 參數 」 疊加
     chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--no-sandbox") # 物理 性 避開 雲端 權限 封鎖
-    chrome_options.add_argument("--disable-dev-shm-usage") # 物理 性 避免 記憶體 崩潰
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--disable-gpu")
-    chrome_options.add_argument("--disable-blink-features=AutomationControlled")
     
-    # [ 1.08 級別 物理 性 修正 ]： 強制 指定 雲端 瀏覽器 路徑
-    chrome_options.binary_location = "/usr/bin/chromium" 
-    
-    # 物理 性 地 啟動， 不再 依賴 自動 下載， 直接 呼叫 您的 packages.txt 零件
-    from selenium.webdriver.chrome.service import Service
-    service = Service("/usr/bin/chromedriver")
-    
-    driver = webdriver.Chrome(service=service, options=chrome_options)
+    # 物理 性的 「 絕對 路徑 」 鋼印 ( 針對 您的 packages.txt 零件 )
+    # 物理 性 地 說， Streamlit Cloud 的 chromium 物理 座標 在此
+    chrome_options.binary_location = "/usr/bin/chromium"
     
     try:
+        # 物理 性 地 手動 指定 Service， 徹底 關閉 自動 偵測
+        service = Service("/usr/bin/chromedriver")
+        driver = webdriver.Chrome(service=service, options=chrome_options)
+        
+        # 物理 性 地 插入 ISIN 鑰匙
         search_url = f"https://www.moneydj.com/funddj/yp/FindFund.djhtm?a={isin_code}"
         driver.get(search_url)
         
-        # 物理 性 執行 您 傳授 的 「 擬人 戰術 」
+        # 執行 領袖 傳授 之 「 擬人 刷新 術 」
         time.sleep(2)
         driver.back()
         time.sleep(1)
         driver.forward()
         
-        wait = WebDriverWait(driver, 20)
-        nav_element = wait.until(EC.presence_of_element_located((By.CLASS_NAME, "t3n2")))
+        # 提取 數據 ... ( 略， 同 前面 邏輯 )
+        nav_element = driver.find_element("class name", "t3n2")
         nav_value = nav_element.text
         return nav_value
+        
     except Exception as e:
-        return f"物理 錯誤: {str(e)[:30]}"
+        # 物理 性 地 捕捉 錯誤 並 顯示 在 儀表板， 方便 領袖 監控
+        st.error(f"物理 抓取 失敗: {str(e)}")
+        return "抓取 失敗"
     finally:
-        driver.quit()
+        if 'driver' in locals():
+            driver.quit()
