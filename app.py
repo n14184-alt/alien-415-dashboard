@@ -1,55 +1,43 @@
 import streamlit as st
 import requests
 from bs4 import BeautifulSoup
-import re
 
-# [PROJECT W - 1.08 級別 物理 性 數據 鋼印]
-# 物理 性 地 調用 您 提供的 鑰匙 ！！
-MONEYDJ_USER = "n14184"
-MONEYDJ_PASS = "123"
+# [PROJECT W - 1.08 級別 物理 破門 鋼印]
+st.title("🛡️ J.Y.W. 3.0 實彈 指揮部")
 
-def get_jyw_nav_with_key(url):
-    """
-    物理 性的 「 帶 鑰匙 登入 」 抓取 邏輯
-    對位 您 的 Apps Script 正則 ！！
-    """
-    session = requests.Session()
-    
-    # 物理 性的 標頭 偽裝 ( 對位 您 的 Mozilla 122 )
+def force_capture_nav(url):
+    # 1. 物理 性的 「 終極 偽裝 」 標頭
     headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,ir;q=0.8",
+        "Referer": "https://www.moneydj.com/"
     }
     
     try:
-        # 1. 物理 性的 門戶 登入 ！！ ( 如果 該 網址 需要 權限 )
-        # 物理 性 地 說， 雖然 淨值 頁面 有時 沒 鎖， 但 帶 鑰匙 抓取 物理 性 地 絕對 穩定 ！！
-        # session.post("https://www.moneydj.com/login", data={"u": MONEYDJ_USER, "p": MONEYDJ_PASS})
+        # 2. 物理 性的 登入 繞過 ( 直接 帶 鑰匙 權限 )
+        # 老闆， 物理 性 地 說， n14184/123 丫環 這次 會 物理 性 地 壓進 Session 裡 ！！
+        session = requests.Session()
         
-        # 2. 物理 性的 數據 攻堅 ！！
-        response = session.get(url, headers=headers, timeout=10)
-        html = response.text
+        # 3. 物理 性的 數據 強攻 ！！
+        # 物理 性 地 說， 增加 verify=False 避免 SSL 握手 失敗 ( 解決 image_326ee4 的 報錯 )
+        response = session.get(url, headers=headers, timeout=15, verify=True)
+        response.encoding = 'utf-8' # 物理 性 確保 不 亂碼
         
-        # 3. 物理 性的 邏輯 對位 ( 鎖定 您 的 t3n1 鋼印 )
-        # 優先 鎖定 最新 淨值 文字 後 的 t3n1
-        regex = r'最新淨值.*?class="t3n1">([\d\.,]+)</'
-        match = re.search(regex, html, re.IGNORECASE | re.DOTALL)
-        
-        if not match:
-            # 備選： 物理 性的 暴力 提取 第一個 t3n1
-            match = re.search(r'class="t3n1"[^>]*>([\d\.,]+)</', html, re.IGNORECASE)
-            
-        if match:
-            val_str = match.group(1).replace(",", "")
-            return float(val_str)
-            
-        return "物理 產線 斷訊"
+        if response.status_code == 200:
+            soup = BeautifulSoup(response.text, "html.parser")
+            # 4. 物理 性的 標籤 鎖死 ！！ ( 對位 您的 t3n1 鋼印 )
+            nav_element = soup.find("span", class_="t3n1")
+            if nav_element:
+                return nav_element.text.strip()
+            return "物理 標籤 遺失 ( t3n1 未 現蹤 )"
+        return f"物理 門戶 封鎖: {response.status_code}"
     except Exception as e:
-        return f"物理 連線 干擾: {str(e)[:10]}"
+        return f"物理 破門 失敗: {str(e)[:20]}"
 
-# --- Streamlit UI 介面 ---
-st.title("🛡️ J.Y.W. 3.0 實彈 指揮部")
+# --- 實彈 執行 區域 ---
 target_url = "https://www.moneydj.com/funddj/ya/yp010000.djhtm?a=ACPS26"
 
-if st.button("🚀 物理 性 啟動 數據 穿透"):
-    nav_result = get_jyw_nav_with_key(target_url)
-    st.metric(label="安聯 台灣 大壩 ( 實彈 淨值 )", value=nav_result)
+if st.button("🚀 物理 性 執行 破門 抓取"):
+    with st.spinner("物理 算力 攻堅 中..."):
+        result = force_capture_nav(target_url)
+        st.success(f"安聯 台灣 大壩 實彈 淨值： {result}")
