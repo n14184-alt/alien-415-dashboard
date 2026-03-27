@@ -3,55 +3,56 @@ import requests
 
 # 1.08 級別 物理性 標題 [cite: 2026-02-22]
 st.markdown("<h6 style='text-align: left; font-size: 10px;'>J.Y.W. STRATEGY MARK 1.08</h6>", unsafe_allow_html=True)
-st.title("🚀 複利 戰場： 基金 實彈 抓取 測試")
+st.title("🚀 複利 戰場： 0/1 基因 自動 識別 測試")
 
-# --- 第一 步： 物理 性的 組合 選擇 ---
-st.subheader("1. 物理 組合 判定")
-col1, col2 = st.columns(2)
+# --- 第一 步： 實彈 代碼 裝填 ---
+st.subheader("1. 代碼 物理 裝填")
+fund_code = st.text_input("請 輸入 基金 代碼 ( e.g., ACDD01, ACPS10 )", "").upper().strip()
 
-with col1:
-    # 物理性 說： 這是 決定 網址 路徑 的 核心 基因 (yp / ya)
-    type_gen = st.selectbox("屬性 基因 (Type)", ["yp", "ya"], help="yp: 淨值型 | ya: 累積型")
-
-with col2:
-    # 物理性 說： 這是 決定 市場 接口 的 核心 基因 (00 / 01)
-    market_gen = st.selectbox("市場 基因 (Market)", ["00", "01"], help="00: 境內 | 01: 境外")
-
-# --- 第二 步： 物理 性的 代碼 輸入 ---
-st.subheader("2. 實彈 代碼 裝填")
-fund_code = st.text_input("請 輸入 基金 代碼 ( e.g., ACPS10, JF0001 )", "").upper()
-
-# --- 第三 步： 物理 性的 邏輯 拼接 與 測試 ---
-if st.button("執行 物理 抓取"):
-    if fund_code:
-        # 物理性 地 說： 依照 領袖 指示， 拼接 出 物理 組合 碼 [cite: 2026-03-27]
-        full_logic_code = f"{type_gen}{market_gen}1001" # 這裡 的 1001 為 MoneyDJ 基礎 路徑 參數
-        
-        st.info(f"物理 邏輯 鎖定： {type_gen} | {market_gen} | 代碼: {fund_code}")
-        
-        # 這裡 模擬 呼叫 您 的 GAS 接口 ( 實彈 測試 時 替換 為 您的 Web App URL )
-        gas_url = "您的_GAS_URL" 
-        params = {
-            "code": fund_code,
-            "type": type_gen,
-            "market": market_gen
-        }
-        
-        try:
-            # 物理性 地 說： 測試 抓取 您的 試算表 C2 函數 數據
-            # response = requests.get(gas_url, params=params)
-            # data = response.json()
-            
-            # 模擬 1.08 級別 的 物理 顯示 [cite: 2026-02-16]
-            st.success(f"✅ 物理 擊穿 成功 ！！")
-            st.write(f"**目標 網址 模擬：** `https://www.moneydj.com/funddj/{type_gen}/{full_logic_code}.djhtm?a={fund_code}`")
-            st.metric(label=f"代碼 {fund_code} 當日 淨值 (C2)", value="536.19", delta="-2.00")
-            
-        except Exception as e:
-            st.error(f"物理 性 斷流： {str(e)}")
+# --- 第二 步： 物理 判定 邏輯 ---
+if fund_code:
+    # 物理性 地 說： 根據 領袖 鐵律， 判定 結尾 數字 [cite: 2026-03-27]
+    last_char = fund_code[-1]
+    
+    if last_char == "0":
+        market_type = "境內 (0000)"
+        target_path = "yp010000"
+        status_color = "blue"
+    elif last_char == "1":
+        market_type = "境外 (1001)"
+        target_path = "yp011001"
+        status_color = "green"
     else:
-        st.warning("請 先 填入 實彈 代碼 ！！")
+        market_type = "未知 ( 非 0/1 結尾 )"
+        target_path = "ERROR"
+        status_color = "red"
+
+    # --- 第三 步： 物理 網址 拼接 ---
+    base_url = f"https://www.moneydj.com/funddj/yp/{target_path}.djhtm?a={fund_code}"
+
+    # 介面 顯示
+    st.markdown(f"**物理 判定 結果：** :{status_color}[{market_type}]")
+    st.info(f"📍 物理 座標 鎖定： {base_url}")
+
+    # --- 第四 步： 模擬 抓取 測試 ---
+    if st.button("啟動 物理 抓取"):
+        if target_path != "ERROR":
+            st.success(f"✅ 物理 擊穿 成功 ！！ ( 模擬 {fund_code} 數據 )")
+            
+            # 物理性 地 說： 這裡 對位 您 找到 的 id_fundname 與 t3n2 位子
+            col1, col2 = st.columns(2)
+            with col1:
+                # 模擬 抓取 id_fundname
+                simulated_name = "安聯 台灣 科技 基金" if "ACDD" in fund_code else "統一 投信 相關 基金"
+                st.metric(label="基金 中文 名稱 (id_fundname)", value=simulated_name)
+            with col2:
+                # 模擬 抓取 t3n2 淨值
+                st.metric(label="當日 淨值 (t3n2)", value="522.54", delta="-2.95")
+            
+            st.code(f"試算表 實彈 函數 建議：\n=IMPORTXML(\"{base_url}\", \"//div[@id='id_fundname']\")", language="excel")
+        else:
+            st.error("物理 性 斷流： 代碼 結尾 必須 為 0 或 1 ！！")
 
 # --- 物理 性的 存檔 鎖住 標註 ---
 st.divider()
-st.caption("【 PROJECT W - 丫環 監控 檔案 】： 物理 邏輯 已 鎖定， 排除 虛假 標籤 ！！")
+st.caption("【 PROJECT W - 丫環 監控 檔案 】： 0/1 結尾 識別 邏輯 已 鎖定， 排除 虛假 標籤 ！！")
