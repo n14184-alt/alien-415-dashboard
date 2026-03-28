@@ -9,7 +9,6 @@ st.title("🎯 1.08 級別：J.Y.W. 3.0 全 戰場 整合 ( 網址 歸位 修復
 # 修正 關鍵： 物理 性 地 移除 多餘 參數， 確保 每個 網址 物理 性 獨立 ！！
 URL_MAP = {
     "ETF & 個股 ( 上市 )": "https://docs.google.com/spreadsheets/d/e/2PACX-1vR9oPfIYlq-RfIqdmmWbcXbjTFCmhtdoCaQfW8t7oI5jg0t6DZijm4r0LZjZLTEJTBbHGJ-EtmprQes/pub?gid=0&output=csv",
-    "ETF & 個股 ( 上 櫃 )": "https://docs.google.com/spreadsheets/d/e/2PACX-1vR9oPfIYlq-RfIqdmmWbcXbjTFCmhtdoCaQfW8t7oI5jg0t6DZijm4r0LZjZLTEJTBbHGJ-EtmprQes/pub?gid=1508249822&output=csv",
     "基金 ( 淨值 結算 )": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ9lbbB4FZm94vh_iSggV2eeQWsngZmvOf1MF5JbOH7K7Fxl02shNIS7Rj2RfdqAhkg7Q0JbAkQUJ3L/pub?output=csv"
 }
 
