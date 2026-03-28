@@ -1,24 +1,41 @@
 import streamlit as st
 import pandas as pd
 
-# [ 物理 鋼印 ]： 領袖 顯影 指令
-st.set_page_config(page_title="複利 帝國 指揮部", layout="wide")
+# --- 1.08 級別 物理 鋼印 ---
+st.set_page_config(page_title="TWSE 實彈 指揮部", layout="wide")
+st.title("🎯 1.08 級別：TWSE 試算表 實時 顯影")
 
-st.title("🏹 施羅德 vs 安聯 ： 物理 顯影 指揮部")
-st.write("---")
+# --- 物理 鎖定 您 指定 的 TWSE 試算表 網址 [cite: 2026-03-28] ---
+# 注意：這裡 使用 您 提供 的 CSV 導出 格式
+TWSE_PUB_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR9oPfIYlq-RfIqdmmWbcXbjTFCmhtdoCaQfW8t7oI5jg0t6DZijm4r0LZjZLTEJTBbHGJ-EtmprQes/pub?gid=1864273820&single=true&output=csv"
 
-# 物理 性的 「 基金 列表 」 對位 [cite: 2026-03-28]
-data = {
-    "標的 名稱": ["施羅德 台 美 雙 利", "安聯 收益 成長 (美元)", "安聯 收益 成長 (台幣)"],
-    "物理 淨值": [15.22, 8.0599, 32.15], # 物理 性 實彈 數據 [cite: 2026-03-28]
-    "物理 狀態": ["台股 大人 監控 中", "複利 盾牌 歸位", "匯率 物理 監控"],
-    "排除 法 判定": ["美股 跌 = 台股 漲", "1.7 物理 水位", "7.08% 復仇 區"]
-}
+# --- 物理 顯影 引擎 [cite: 2026-03-28] ---
+def get_twse_metrics():
+    try:
+        # 物理 性 地 讀取 您 的 TWSE 分頁
+        df = pd.read_csv(TWSE_PUB_URL)
+        
+        # 物理 性 格式 化 ( 確保 欄位 對位 基金 樣式 )
+        # 假設 您的 試算表 欄位 包含 '名稱' 與 '股價' ( 或 類似 標籤 )
+        st.subheader("📊 物理 顯影：實時 股價 監控")
+        
+        # 視覺 渲染 邏輯 [cite: 2026-02-18]
+        def style_positive(val):
+            try:
+                num = float(val)
+                if num > 0: return 'color: #900c3f; font-weight: bold'
+                elif num < 0: return 'color: #145a32;'
+            except: pass
+            return ''
+            
+        # 物理 性 地 像 基金 一樣 顯示 表格
+        st.dataframe(df.style.applymap(style_positive), use_container_width=True, height=800)
+        return True
+    except Exception as e:
+        st.error(f"物理 性 斷流 ： 找不到 數據 或 網址 錯誤 ！！ {e}")
+        return False
 
-df = pd.DataFrame(data)
-
-# 物理 性的 「 基金 樣式 」 噴發
-st.table(df) 
-
-st.write("---")
-st.info("老闆 ， 物理性 地 說 ， 只要 看到 這個 表格 ， 就 代表 您的 算力 已經 物理 性 擊穿 漆黑 了 ！！")
+# --- 啟動 買進 攻 ---
+if st.button("啟動 TWSE 物理 顯影"):
+    with st.spinner("正在 物理 性 穿透 試算表 數據 ..."):
+        get_twse_metrics()
