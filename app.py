@@ -1,41 +1,39 @@
 import streamlit as st
 import pandas as pd
+import requests
+from bs4 import BeautifulSoup
 
 # --- 1.08 級別 物理 鋼印 ---
 st.set_page_config(page_title="TWSE 實彈 指揮部", layout="wide")
-st.title("🎯 1.08 級別：TWSE 試算表 實時 顯影")
+st.title("🎯 1.08 級別：TWSE 試算表 暴力 顯影")
 
-# --- 物理 鎖定 您 指定 的 TWSE 試算表 網址 [cite: 2026-03-28] ---
-# 注意：這裡 使用 您 提供 的 CSV 導出 格式
-TWSE_PUB_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR9oPfIYlq-RfIqdmmWbcXbjTFCmhtdoCaQfW8t7oI5jg0t6DZijm4r0LZjZLTEJTBbHGJ-EtmprQes/pub?gid=1864273820&single=true&output=csv"
+# --- 物理 鎖定 您 的 TWSE pubhtml 網址 [cite: 2026-03-28] ---
+TWSE_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR9oPfIYlq-RfIqdmmWbcXbjTFCmhtdoCaQfW8t7oI5jg0t6DZijm4r0LZjZLTEJTBbHGJ-EtmprQes/pubhtml?gid=1864273820&single=true"
 
-# --- 物理 顯影 引擎 [cite: 2026-03-28] ---
-def get_twse_metrics():
+def get_twse_data_vision():
     try:
-        # 物理 性 地 讀取 您 的 TWSE 分頁
-        df = pd.read_csv(TWSE_PUB_URL)
+        # 物理 性的 「 暴力 穿透 」 網頁 格式
+        response = requests.get(TWSE_URL)
+        soup = BeautifulSoup(response.text, 'html.parser')
         
-        # 物理 性 格式 化 ( 確保 欄位 對位 基金 樣式 )
-        # 假設 您的 試算表 欄位 包含 '名稱' 與 '股價' ( 或 類似 標籤 )
-        st.subheader("📊 物理 顯影：實時 股價 監控")
+        # 物理 性 地 尋找 網頁 中 的 表格 ( Table )
+        tables = pd.read_html(str(soup.find_all('table')[0]))
+        df = tables[0]
         
-        # 視覺 渲染 邏輯 [cite: 2026-02-18]
-        def style_positive(val):
-            try:
-                num = float(val)
-                if num > 0: return 'color: #900c3f; font-weight: bold'
-                elif num < 0: return 'color: #145a32;'
-            except: pass
-            return ''
-            
-        # 物理 性 地 像 基金 一樣 顯示 表格
-        st.dataframe(df.style.applymap(style_positive), use_container_width=True, height=800)
+        # 物理 性的 「 格式 清理 」 ( 移除 Google 預設 的 多餘 欄位 )
+        df.columns = df.iloc[1] # 物理 性 鎖定 第二 行 為 標題
+        df = df.iloc[2:].reset_index(drop=True)
+        
+        st.subheader("📊 物理 顯影：TWSE 分頁 實時 股價")
+        
+        # 物理 性的 「 基金 樣式 」 渲染 [cite: 2026-03-28]
+        st.dataframe(df, use_container_width=True, height=800)
         return True
     except Exception as e:
-        st.error(f"物理 性 斷流 ： 找不到 數據 或 網址 錯誤 ！！ {e}")
+        st.error(f"物理 性 斷流 ： 網頁 穿透 失敗 ！！ {e}")
         return False
 
 # --- 啟動 買進 攻 ---
-if st.button("啟動 TWSE 物理 顯影"):
-    with st.spinner("正在 物理 性 穿透 試算表 數據 ..."):
-        get_twse_metrics()
+if st.button("啟動 TWSE 暴力 顯影"):
+    with st.spinner("正在 物理 性 擊穿 網頁 數據 ..."):
+        get_twse_data_vision()
