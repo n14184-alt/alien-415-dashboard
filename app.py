@@ -11,7 +11,7 @@ URL_TWSE = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR9oPfIYlq-RfIqdmmWb
 URL_OTC = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQQJErYh_DqHhxrKGswfAk7kgrw1D-mxkXCMoVw4tupugViWY4bVtA4HYur5JQ_znPi3lU5FkPvMkLl/pub?gid=1587848416&single=true&output=csv"
 
 MONITOR_LISTS = {
-    "基金 (28)": URL_FUND,
+    "基金 (精選)": URL_FUND,
     "上市 TWSE": URL_TWSE,
     "上櫃 OTC": URL_OTC
 }
